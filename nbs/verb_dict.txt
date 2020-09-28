@@ -45,7 +45,10 @@ bang,bang,banged,banged,bangs,banging
 banish,banish,banished,banished,banishes,banishing
 bash,bash,bashed,bashed,bashes,bashing
 bat,bat,batted,batted,bats,batting
-be (am,are),be (am,are),was / were,been,is,being
+be,be,be,been,be,being
+be,am,was,been,am,being
+be,is,was,been,is,being 
+be,are,were,been,are,being
 bear,bear,bore,born,bears,bearing
 bear,bear,bore,borne,bears,bearing
 beat,beat,beat,beaten,beats,beating
