@@ -50,7 +50,7 @@ services:
   
   jupyter-notebook:
     container_name: jupyternb
-    image: jupyter/all-spark-notebook
+    image: jupyter/all-spark-notebook:42f4c82a07ff
     depends_on:
         - spark-master
     expose:
