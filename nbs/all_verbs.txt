@@ -233,8 +233,11 @@ batted
 batted
 bats
 batting
-be (am,are)
-was / were
+be
+am
+are
+was
+were
 been
 is
 being
