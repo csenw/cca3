@@ -168,5 +168,5 @@ services:
     volumes:
         - ./nbs:/home/jovyan/work/nbs
         - ./events:/tmp/spark-events
-    command: bash -c "pip install gdown && gdown -O /home/jovyan/work/nbs/un-general-debates.csv 1p2FqqFP-ZbmhFdOmvZoQzdDyF5D0MRDn; start-notebook.sh --ip=0.0.0.0 --allow-root --NotebookApp.token=''" 
+    command: bash -c "pip install gdown faiss-cpu && gdown -O /home/jovyan/work/nbs/un-general-debates.csv 1p2FqqFP-ZbmhFdOmvZoQzdDyF5D0MRDn; start-notebook.sh --ip=0.0.0.0 --allow-root --NotebookApp.token=''" 
 
