@@ -1,117 +1,7 @@
-version: "3.3"
-
-volumes:
-    shared-workspace:
-    hadoop_datanode1:
-    hadoop_datanode2:
-    hadoop_datanode3:
-    hadoop_namenode:
-    hadoop_historyserver:
-networks:
-    spark-net:
-        driver: bridge
-
 services:
-  namenode:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    container_name: namenode
-    networks:
-      - "spark-net"
-    ports:
-      - 80:9870
-      - 9000:9000
-    volumes:
-      - hadoop_namenode:/hadoop/dfs/name
-      - ./nbs:/home/nbs
-    environment:
-      - CLUSTER_NAME=test
-    env_file:
-      - ./hadoop.env
-
-  resourcemanager:
-    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
-    container_name: resourcemanager
-    depends_on:
-      - namenode
-      - datanode1
-      - datanode2
-      - datanode3
-    networks:
-      - "spark-net"
-    ports:
-      - 8089:8088
-    env_file:
-      - ./hadoop.env
-
-  historyserver:
-    image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
-    container_name: historyserver
-    depends_on:
-      - namenode
-      - datanode1
-      - datanode2
-      - datanode3
-    networks:
-      - "spark-net"
-    volumes:
-      - hadoop_historyserver:/hadoop/yarn/timeline
-    env_file:
-      - ./hadoop.env
-
-  nodemanager1:
-    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
-    container_name: nodemanager
-    depends_on:
-      - namenode
-      - datanode1
-      - datanode2
-      - datanode3
-    networks:
-      - "spark-net"
-    env_file:
-      - ./hadoop.env
-
-  datanode1:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    container_name: datanode1
-    depends_on:
-      - namenode
-    networks:
-        - "spark-net"
-    volumes:
-      - hadoop_datanode1:/hadoop/dfs/data
-    env_file:
-      - ./hadoop.env
-
-  datanode2:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    container_name: datanode2
-    depends_on:
-      - namenode
-    networks:
-        - "spark-net"
-    volumes:
-      - hadoop_datanode2:/hadoop/dfs/data
-    env_file:
-      - ./hadoop.env
-
-  datanode3:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    container_name: datanode3
-    depends_on:
-      - namenode
-    networks:
-        - "spark-net"
-    volumes:
-      - hadoop_datanode3:/hadoop/dfs/data
-    env_file:
-      - ./hadoop.env
-
   spark-master:
     image: bde2020/spark-master:3.0.0-hadoop3.2
     container_name: spark-master
-    depends_on:
-        - namenode
     networks:
         - "spark-net"
     ports:
@@ -119,14 +9,12 @@ services:
         - "7077:7077"
     environment:
         - INIT_DAEMON_STEP=setup_spark
-        - NAMENODE_HOSTNAME=namenode
   
   spark-worker-1:
     image: bde2020/spark-worker:3.0.0-hadoop3.2
     container_name: spark-worker-1
     depends_on:
         - spark-master
-        - namenode
     networks:
         - "spark-net"
     ports:
@@ -135,14 +23,12 @@ services:
         - "SPARK_MASTER=spark://spark-master:7077"            
         - SPARK_WORKER_CORES=1
         - SPARK_WORKER_MEMORY=512m
-        - NAMENODE_HOSTNAME=namenode
-
+        
   spark-worker-2:
     image: bde2020/spark-worker:3.0.0-hadoop3.2
     container_name: spark-worker-2
     depends_on:
         - spark-master
-        - namenode
     networks:
         - "spark-net"
     ports:
@@ -151,7 +37,6 @@ services:
         - "SPARK_MASTER=spark://spark-master:7077"            
         - SPARK_WORKER_CORES=1
         - SPARK_WORKER_MEMORY=512m
-        - NAMENODE_HOSTNAME=namenode
   
   jupyter-notebook:
     container_name: jupyternb
@@ -170,3 +55,9 @@ services:
         - ./events:/tmp/spark-events
     command: bash -c "pip install gdown faiss-cpu && gdown -O /home/jovyan/work/nbs/un-general-debates.csv 1p2FqqFP-ZbmhFdOmvZoQzdDyF5D0MRDn; start-notebook.sh --ip=0.0.0.0 --allow-root --NotebookApp.token=''" 
 
+volumes:
+    shared-workspace:
+    
+networks:
+    spark-net:
+        driver: bridge
